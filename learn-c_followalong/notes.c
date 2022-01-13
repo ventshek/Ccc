@@ -1,4 +1,5 @@
 // 001 Introduction.
+
 // Print provided text.
 #include <stdio.h>
 
@@ -8,6 +9,7 @@ int main() {
 }
 
 // 002 Variables and types.
+
 // Integers - whole numbers which can be either positive or negative. Defined using:
 char, int, short, long, long long.
 // Unsigned integers - whole numbers which can only be positive. Defined using:
@@ -37,6 +39,7 @@ int main() {
 }
 
 // 003 Arrays.
+
 // Define an array of 10 integers using:
 int numbers[10];
 // Populate the array using:
@@ -67,6 +70,7 @@ int main() {
 }
 
 // 004 Multidimensional Arrays.
+
 // General form of a multidimesional array declaration:
 type name[size1][size2]...[sizeN];
 char vowels[1][5] = {
@@ -120,7 +124,9 @@ printf("The average marks obtained in subject %d is: %.2f\n", i, average);
 }
 return 0;
 }
+
 // 005 Conditions. 
+
 // General form of the decision making structures in C:
 int target = 10;
 if (target == 10) {
@@ -188,10 +194,34 @@ int target = 9;
 if (target != 10) {
     printf("Target is not equal to 10");
 }
+// Checks if the guess number is equal to 555:
+#include <stdio.h>
+void guessNumber(int guess) {
+    // TODO: write your code here
+    if (guess < 555) {
+        printf("Your guess is too low.\n");
+    } else if (guess > 555) {
+        printf("Your guess is too high.\n");
+    } else {
+        printf("Correct. You guessed it!\n");
+    }
+}
+int main() {
+    guessNumber(500);
+    guessNumber(600);
+    guessNumber(555);
+}
+
+// 006 Strings.
 
 
 
-// 006
+
+
+
+
+
+
 // 007
 // 008
 // 009
