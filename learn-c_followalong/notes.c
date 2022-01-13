@@ -126,7 +126,7 @@ int target = 10;
 if (target == 10) {
     printf("Target is equal to 10");
 }
-// Inequality operators, with IF can be used to evaluate expressions. For example:
+// Inequality operators, with IF can be used to evaluate expressions:
 int foo = 1;
 int bar = 2;
 if (foo < bar) {
@@ -135,7 +135,7 @@ if (foo < bar) {
 if (foo > bar) {
     printf("foo is greater than bar.");
 }
-// Else keyword used to execute code when the expression evaluates to false. 
+// Else keyword used to execute code when the expression evaluates to false:
 int foo = 1;
 int bar = 2;
 if (foo < bar) {
@@ -143,9 +143,51 @@ if (foo < bar) {
 } else {
     printf("foo is greater than bar.");
 }
-
-
-
+// Multiple IF ELSE statements can be chained when more than 2 outcomes:
+int foo = 1;
+int bar = 2;
+if (foo < bar) {
+    printf("foo is smaller than bar.");
+} else if (foo == bar) {
+    printf("foo is equal to bar.");
+} else {
+    printf("foo is greater than bar.");
+}
+// Statements can be looped inside other loops (nesting):
+int peanuts_eaten = 22;
+int peanuts_in_jar = 100;
+int max_peanut_limit = 50;
+if (peanuts_in_jar > 80) {
+    if (peanuts_eaten < max_peanut_limit) {
+        printf("Take as many peanuts as you want!\n");
+    }
+} else {
+    if (peanuts_eaten > peanuts_in_jar) {
+        printf("You can't have anymore peanuts!\n");
+    }
+    else {
+        printf("Alright, just one more peanut.\n");
+    }
+}
+// AND operator (&&) can be used to check if two expressions evaluate to TRUE:
+int foo = 1;
+int bar = 2;
+int moo = 3;
+if (foo < bar && moo > bar) {
+    printf("foo is smaller than bar AND moo is larger than bar.");
+}
+// OR operator (||) can be used to check if at least one of the expressions evaluate to TRUE:
+int foo = 1;
+int bar = 2;
+int moo = 3;
+if (foo < bar || moo > bar) {
+    printf("foo is smaller than bar OR moo is larger than bar.");
+}
+// The NOT operator (!) can be used:
+int target = 9;
+if (target != 10) {
+    printf("Target is not equal to 10");
+}
 
 
 
