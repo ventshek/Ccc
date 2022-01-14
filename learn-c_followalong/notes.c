@@ -394,7 +394,8 @@ void print_big(int number) {
     }
 }
 
-// 010 Static. 
+// 010 Static.
+
 /* Static is a keyword, it can be used for variables and functions.
 By default variables are local to the scope in which they are defined.
 Variables can be declared as static to increase their scope to the whole file, enabling the variables to be accessed anywhere in the file. */
@@ -632,7 +633,7 @@ free(myperson); // The free does not delete the myperson variable itself, it sim
 typedef struct {
   int x;
   int y;
-} point;
+} point;1
 int main() {
   point * mypoint = NULL;
   mypoint = (point *)malloc(sizeof(point));
@@ -642,6 +643,568 @@ int main() {
   free(mypoint);
   return 0;
 }
+
+// 015 Arrays and Pointers. 
+
+// In the example below the pointer variable pc stores the address of the character variable c:
+char c = 'A';
+char *pc = &c;
+// c is a scalar variable that can store only a single value. 
+// Below is an example of pointers to arrays:
+#include <stdio.h>
+#include <stdlib.h>
+char vowels[] = {'A', 'E', 'I', 'O', 'U'};
+char *pvowels = vowels;
+int i;
+int main() {
+// Print the addresses
+for (i = 0; i < 5; i++) { // &vowels[i] gives the memory locaion of the ith element of the array vowels.
+    printf("&vowels[%d]: %p, pvowels + %d: %p, vowels + %d: %p\n", i, &vowels[i], i, pvowels + i, i, vowels + i);
+}
+// Print the values
+for (i = 0; i < 5; i++) {
+    printf("vowels[%d]: %c, *(pvowels + %d): %c, *(vowels + %d): %c\n", i, vowels[i], i, *(pvowels + i), i, *(vowels + i));
+}
+}
+// As this is a character array each element occupies one byte so that the consecutive memory addresses are separated by a single byte. 
+// A pointer, pvowels is created and assigned the address of the array vowels to it. 
+// pvowels + i is a valid operation, although in general this may not always be meeningful (Pointer Arithmetics).
+// The output shown above indicates that &vowels[i] and pvowels + i are equivalent.
+// pvowels + i and vowels + i returns the same thing — address of the ith element of the array vowels. However *(pvowels + i) and *(vowels + i) both return the ith element of the array vowels. This is because the name of an array itself is a (constant) pointer to the first element of the array. In other words, the notations vowels, &vowels[0], and vowels + 0 all point to the same location. 
+// Example of dynamically allocating memory for an array:
+#include <stdio.h>
+#include <stdlib.h>
+int n = 5;
+char *pvowels = (char *) malloc(n * sizeof(char));
+int i;
+int main() {
+pvowels[0] = 'A';
+pvowels[1] = 'E';
+*(pvowels + 2) = 'I';
+pvowels[3] = 'O';
+*(pvowels + 4) = 'U';
+for (i = 0; i < n; i++) {
+    printf("%c ", pvowels[i]);
+}
+printf("\n");
+free(pvowels);
+}
+// Above five contiguous bytes of memory are allocated to store five characters.
+// Array notations were used to traverse the blocks of memory as if pvowels is an array. However pvowels is actually a pointer. Pointers and arrays, in general, are not the same. 
+// While declaring an array, the number of elements that it would contain must be known beforehand. Therefore in some scenarios it might happen that the space allocated for an array is either less than the desired space or more. Using dynamic memory allocation, one can allocate just as much memory as required by a program. Additionally, unused memory can be freed as soon as it is no longer required by invoking the free() function.
+// However with dynamic memory allocation one must responsibly call free() wherever relevant to prevent memory leaks. 
+// Below is an example of dynamic memory allocationfor a two-dimensional array. This can be generalized to n-dimensions in a similar way. Unlike one-dimensional arrays, where we used a pointer, in this case we require a pointer to a pointer, as shown below:
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+int nrows = 2;
+int ncols = 5;
+int i, j;
+// Allocate memory for nrows pointers
+char **pvowels = (char **) malloc(nrows * sizeof(char *));
+// For each row, allocate memory for ncols elements
+pvowels[0] = (char *) malloc(ncols * sizeof(char));
+pvowels[1] = (char *) malloc(ncols * sizeof(char));
+pvowels[0][0] = 'A';
+pvowels[0][1] = 'E';
+pvowels[0][2] = 'I';
+pvowels[0][3] = 'O';
+pvowels[0][4] = 'U';
+pvowels[1][0] = 'a';
+pvowels[1][1] = 'e';
+pvowels[1][2] = 'i';
+pvowels[1][3] = 'o';
+pvowels[1][4] = 'u';
+for (i = 0; i < nrows; i++) {
+    for(j = 0; j < ncols; j++) {
+        printf("%c ", pvowels[i][j]);
+    }
+    printf("\n");
+}
+// Free individual rows
+free(pvowels[0]);
+free(pvowels[1]);
+// Free the top-level pointer
+free(pvowels);
+return 0;
+}
+// First three rows of Pascal's triangle stored in a TDA using dynamic memory allocation:
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    int i, j;
+    int **pnumbers; // defining the 2D pointer variable. 
+    pnumbers = (int **) malloc(3  *sizeof(int *)); // Memory is allocated for holding three rows.
+    // Memory is allocated for storing the individual elements in a row three rows means 1+2+3=6.
+    pnumbers[0] = (int *) malloc(1 * sizeof(int));
+    pnumbers[1] = (int *) malloc(2 * sizeof(int));
+    pnumbers[2] = (int *) malloc(3 * sizeof(int));
+    // Values are assigned to the array.
+    pnumbers[0][0] = 1;
+    pnumbers[1][0] = 1;
+    pnumbers[1][1] = 1;
+    pnumbers[2][0] = 1;
+    pnumbers[2][1] = 2;
+    pnumbers[2][2] = 1;
+    for (i = 0; i < 3; i++) { // i starts at a value of 0, its max is set to be 3 and it is set to increment. 
+        for (j = 0; j <= i; j++) { // j starts with 0, if i is greater than or equal to j then j increments.
+            printf("%d", pnumbers[i][j]);
+        }
+        printf("\n");
+    }
+    for (i = 0; i < 3; i++) { // Allocated memory for each row is freed.
+        free(pnumbers[i]);
+    }
+    free(pnumbers);
+  return 0;
+}
+/* Output:
+1
+11
+121
+*/
+
+// 016 Recursion.
+
+/* Recursion occurs when a function contains within it a call to itself. Recursion can result in very neat, elegant code that is intuitive to follow. It can also result in a very large amount of memory being used if the recursion gets too deep.
+Common examples of where recursion is used:
+Walking recursive data structures such as linked lists, binary trees, etc.
+Exploring possible scenarios in games such as chess.
+Recursion always consists of two main parts:
+A terminating case that indicates when the recursion will finish.
+A call to itself that must make progress towards the terminating case. */
+// This function performs multiplicaion by recursively adding:
+#include <stdio.h>
+unsigned int multiply(unsigned int x, unsigned int y)
+{
+    if (x == 1) // If x is 1 then the loop will stop.
+    {
+        /* Terminating case */
+        return y;
+    }
+    else if (x > 1) // If x is greater than 1 then the loop procceds below where 1 is minused from x.
+    {
+        /* Recursive step */
+        return y + multiply(x-1, y); // Y is added to the muliply function's total and x is minused 1.
+    }
+    /* Catch scenario when x is zero */
+    return 0;
+}
+int main() { // Givesthe values that are being multiplied and prints the result.
+    printf("4 times 10 is %d", multiply(4, 10)); 
+    return 0;
+}
+
+
+// Computing the factorial by recursive multiplicaion:
+#include <stdio.h>
+/* function declaration */
+int factorial(int number);
+int main() {
+    printf("0! = %i\n", factorial(0));
+    printf("1! = %i\n", factorial(1));
+    printf("3! = %i\n", factorial(3));
+    printf("5! = %i\n", factorial(5));
+}
+int factorial(int number) {
+        if (number > 1) {
+            return number * factorial(number-1);
+        }
+        else {
+	           return 1;
+        }
+}
+
+// 017 Linked lists. 
+
+/* Simple example of a dynamic data structure that uses pointers for its implementation.
+Pointers are essesntil to understanding how linked lists work. 
+Essentially, linked lists function as an array that can grow and shrink as needed, from any point in the array.
+Linked lists have a few advantages over arrays:
+    Items can be added or removed from the middle of the list
+    There is no need to define an initial size
+However, linked lists also have a few disadvantages:
+    There is no "random" access - it is impossible to reach the nth item in the array without first iterating over all items up until that item. This means we have to start from the beginning of the list and count how many times we advance in the list until we get to the desired item.
+    Dynamic memory allocation and pointers are required, which complicates the code and increases the risk of memory leaks and segment faults.
+    Linked lists have a much larger overhead over arrays, since linked list items are dynamically allocated (which is less efficient in memory usage) and each item in the list also must store an additional pointer.
+A linked list is a set of dynamically allocated nodes, arranged in such a way that each node contains one value and one pointer. The pointer always points to the next member of the list. If the pointer is NULL, then it is the last node in the list.
+A linked list is held using a local pointer variable which points to the first item of the list. If that pointer is also NULL, then the list is considered to be empty. */
+// Defining a linked list node:
+typedef struct node {
+    int val;
+    struct node * next;
+} node_t;
+// Struct is defined in a recursive manner, this node is named node_t.
+// The nodes can now be used. Here is a local variable which points to the first item of the list (called head):
+node_t * head = NULL;
+head = (node_t *) malloc(sizeof(node_t));
+if (head == NULL) {
+    return 1;
+}
+head->val = 1;
+head->next = NULL;
+// The first variable in the list has now been created. The value must now be set to empty in order to finish populating the list. Always check if malloc returned a NULL value or not.
+// To add a variable to the end of the list continue advancing to the next pointer:
+node_t * head = NULL;
+head = (node_t *) malloc(sizeof(node_t));
+head->val = 1;
+head->next = (node_t *) malloc(sizeof(node_t));
+head->next->val = 2;
+head->next->next = NULL;
+// 'current' pointer is needed to keep track of the node being printed. Once having printed the value of the node the current pointer is set to the next node and then print again, until the end of the list has been reached (the next node is NULL).
+void print_list(node_t * head) {
+    node_t * current = head;
+    while (current != NULL) {
+        printf("%d\n", current->val);
+        current = current->next;
+    }
+}
+// The pointer is advanced to the next item in the list until the last item is reached:
+void push(node_t * head, int val) {
+    node_t * current = head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    /* now we can add a new variable */
+    current->next = (node_t *) malloc(sizeof(node_t));
+    current->next->val = val;
+    current->next->next = NULL;
+}
+// The best use cases for linked lists are stacks and queues.
+/* Adding an item to the beginning of the list (pushing to the list).
+To add to the beginning of the list, we will need to do the following:
+    1.Create a new item and set its value.
+    2. Link the new item to point to the head of the list.
+    3. Set the head of the list to be our new item.
+This will effectively create a new head to the list with a new value, and keep the rest of the list linked to it. Since we use a function to do this operation, we want to be able to modify the head variable. To do this, we must pass a pointer to the pointer variable (a double pointer) so we will be able to modify the pointer itself */
+void push(node_t ** head, int val) {
+    node_t * new_node;
+    new_node = (node_t *) malloc(sizeof(node_t));
+
+    new_node->val = val;
+    new_node->next = *head;
+    *head = new_node;
+}
+/* Removing the first item (popping from the list)
+
+To pop a variable, we will need to reverse this action:
+
+    Take the next item that the head points to and save it
+    Free the head item
+    Set the head to be the next item that we've stored on the side
+*/
+// Here is the code:
+int pop(node_t ** head) {
+    int retval = -1;
+    node_t * next_node = NULL;
+    if (*head == NULL) {
+        return -1;
+    }
+    next_node = (*head)->next;
+    retval = (*head)->val;
+    free(*head);
+    *head = next_node;
+    return retval;
+}
+/* Removing the last item of the list
+Removing the last item from a list is very similar to adding it to the end of the list, but with one big exception - since we have to change one item before the last item, we actually have to look two items ahead and see if the next item is the last one in the list. */
+// Here is the code:
+int remove_last(node_t * head) {
+    int retval = 0;
+    /* if there is only one item in the list, remove it */
+    if (head->next == NULL) {
+        retval = head->val;
+        free(head);
+        return retval;
+    }
+    /* get to the second to last node in the list */
+    node_t * current = head;
+    while (current->next->next != NULL) {
+        current = current->next;
+    }
+    /* now current points to the second to last item of the list, so let's remove current->next */
+    retval = current->next->val;
+    free(current->next);
+    current->next = NULL;
+    return retval;
+}
+/* Removing a specific item
+
+To remove a specific item from the list, either by its index from the beginning of the list or by its value, we will need to go over all the items, continuously looking ahead to find out if we've reached the node before the item we wish to remove. This is because we need to change the location to where the previous node points to as well.
+
+Here is the algorithm:
+
+    Iterate to the node before the node we wish to delete
+    Save the node we wish to delete in a temporary pointer
+    Set the previous node's next pointer to point to the node after the node we wish to delete
+    Delete the node using the temporary pointer */
+// Here is the code:    
+int remove_by_index(node_t ** head, int n) {
+    int i = 0;
+    int retval = -1;
+    node_t * current = *head;
+    node_t * temp_node = NULL;
+    if (n == 0) {
+        return pop(head);
+    }
+    for (i = 0; i < n-1; i++) {
+        if (current->next == NULL) {
+            return -1;
+        }
+        current = current->next;
+    }
+    if (current->next == NULL) {
+        return -1;
+    }
+    temp_node = current->next;
+    retval = temp_node->val;
+    current->next = temp_node->next;
+    free(temp_node);
+    return retval;
+}
+// The "remove_by_value" function recieves a double pointer to the head and removes the first item in the list which has the value "val":
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node { // The linked list node is defined.
+    int val; // The 'node' has one member, an integer named 'val'.
+    struct node * next; // 'next' is a pointer, pointing to the first list entry of test_list.
+} node_t; // The node is named node_t.
+void print_list(node_t * head) { // Prints contents of linked list starting from given node. 
+    node_t * current = head; // Sets the current pointer value to that of the second to last entry in the list.
+    while (current != NULL) { // The 'current' pointer is set to move to the next node until NULL is reached.
+        printf("%d\n", current->val); // Prints the val, given by current.
+        current = current->next; // Moves current onto the next item in the list. 
+    }
+}
+// Removes the first item from a list.
+int pop(node_t ** head) {  // Uses pointer to pointer to add the next item pointed to by head to node_t.
+    int retval = -1;
+    node_t * next_node = NULL; // node_t and next_node now both point to null.
+    if (*head == NULL) {
+        return -1;
+    }
+    next_node = (*head)->next; // Sets the next_node value to that of head having taken the value of next.
+    retval = (*head)->val;
+    free(*head); // Releases the head value from memory.
+    *head = next_node;
+    return retval;
+}
+int remove_by_value(node_t ** head, int val) {
+    node_t *previous, *current;
+    if (*head == NULL) {
+        return -1;
+    }
+    if ((*head)->val == val) {
+        return pop(head);
+    }
+    previous = *head;
+    current = (*head)->next;
+    while (current) {
+        if (current->val == val) {
+            previous->next = current->next;
+            free(current);
+            return val;
+        }
+        previous = current;
+        current  = current->next;
+    }
+    return -1;
+}
+void delete_list(node_t *head) {
+    node_t  *current = head, 
+            *next = head;
+    while (current) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
+int main(void) {
+    node_t * test_list = (node_t *) malloc(sizeof(node_t));
+    test_list->val = 1;
+    test_list->next = (node_t *) malloc(sizeof(node_t));
+    test_list->next->val = 2;
+    test_list->next->next = (node_t *) malloc(sizeof(node_t));
+    test_list->next->next->val = 3;
+    test_list->next->next->next = (node_t *) malloc(sizeof(node_t));
+    test_list->next->next->next->val = 4;
+    test_list->next->next->next->next = NULL;
+    remove_by_value(&test_list, 3);
+    print_list(test_list);
+    delete_list(test_list);
+    return EXIT_SUCCESS;
+}
+
+// 018 Binary trees.
+
+// A Binary Tree is a type of data structure in which each node has at most two children (left child and right child). 
+// Binary trees are used to implement binary search trees and binary heaps, and are used for efficient searching and sorting. 
+// A binary tree is a special case of a K-ary tree, where k is 2. 
+// Common operations for binary trees include insertion, deletion, and traversal. 
+// The difficulty of performing these operations varies if the tree is balanced and also whether the nodes are leaf nodes or branch nodes. 
+// For balanced trees the depth of the left and right subtrees of every node differ by 1 or less. This allows for a predictable depth also known as height. This is the measure of a node from root to leaf, where root is 0 and sebsequent nodes are (1,2..n). This can be expressed by the integer part of log2(n) where n is the number of nodes in the tree.
+// The operations performed on trees requires searching in one of two main ways: Depth First Search and Breadth-first search.
+// Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures. 
+// One starts at the root and explores as far as possible along each branch before backtracking. 
+// There are three types of depth first search traversal: pre-order visit, left, right, in-order left, visit, right, post-order left, right, visit. 
+// Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph structures. In level-order, where we visit every node on a level before going to a lower level.
+// Below is an implementation of a binary tree that has insertion and printing capabilities. This tree is ordered but not balanced. This example maintains its ordering at insertion time.
+Change the print routine to depth-first search pre-order.(root>left>right)
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+  int val;
+  struct node * left;
+  struct node * right;
+} node_t;
+void insert(node_t * tree,int val);
+void print_tree(node_t * current);
+void printDFS(node_t * current);
+int main()
+{
+  node_t * test_list = (node_t *) malloc(sizeof(node_t));
+  /* set values explicitly, alternative would be calloc() */
+  test_list->val = 0;
+  test_list->left = NULL;
+  test_list->right = NULL;
+
+  insert(test_list,5);
+  insert(test_list,8);
+  insert(test_list,4);
+  insert(test_list,3);
+
+  printDFS(test_list);
+  printf("\n");
+}
+void insert(node_t * tree, int val)
+{
+  if (tree->val == 0)
+  {
+    /* insert on current (empty) position */
+    tree->val = val;
+  }
+  else
+  {
+    if (val < tree->val)
+    {
+      /* insert left */
+      if (tree->left != NULL)
+      {
+        insert(tree->left, val);
+      }
+      else
+      {
+        tree->left = (node_t *) malloc(sizeof(node_t));
+        /* set values explicitly, alternative would be calloc() */
+        tree->left->val = val;
+        tree->left->left = NULL;
+        tree->left->right = NULL;
+      }
+    }
+    else
+    {
+      if (val >= tree->val)
+      {
+        /* insert right */
+        if (tree->right != NULL)
+        {
+          insert(tree->right,val);
+        }
+        else
+        {
+          tree->right = (node_t *) malloc(sizeof(node_t));
+          /* set values explicitly, alternative would be calloc() */
+          tree->right->val = val;
+          tree->right->left = NULL;
+          tree->right->right = NULL;
+        }
+      }
+    }
+  }
+}
+/* depth-first search */
+void printDFS(node_t * current)
+{
+  /* change the code here */
+  if (current == NULL)         return;   /* security measure */
+  if (current->left != NULL)   printDFS(current->left);
+  if (current != NULL)         printf("%d ", current->val);
+  if (current->right != NULL)  printDFS(current->right);
+}
+
+// 019 Unions. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DE 
+ M
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
