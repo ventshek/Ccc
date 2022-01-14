@@ -2,10 +2,26 @@
 
 // Print provided text.
 #include <stdio.h>
-
 int main() {
   printf("Hello, world");
   return 0;
+}
+// Find the sum of two numbers. 
+#include <stdio.h>
+//#include <conio.h>
+void main() {
+	int num1;
+	int num2;
+	int sum;
+	//clrscr();
+	printf("Program to calculate Sum of two numbers :  \n\n");
+	printf("Enter value of 1st number : ");
+	scanf("%d", &num1);
+	printf("\n\nEnter value of 2st number : ");
+	scanf("%d", &num2);
+	sum = num1 + num2;
+	printf("\n\n Sum of %d + %d = %d", num1, num2, sum);
+	//getch();
 }
 
 // 002 Variables and types.
@@ -243,7 +259,6 @@ strncat(dest,src,3);
 printf("%s\n",dest);
 strncat(dest,src,20);
 printf("%s\n",dest);
-
 // Edits the last name and prints the result using pointer for first name and local array for last name:
 #include <string.h>
 #include <stdio.h>
@@ -962,7 +977,7 @@ int remove_by_index(node_t ** head, int n) {
     free(temp_node);
     return retval;
 }
-// The "remove_by_value" function recieves a double pointer to the head and removes the first item in the list which has the value "val":
+// The "remove_by_value" function receives a double pointer to the head and removes the first item in the list which has the value "val":
 #include <stdio.h>
 #include <stdlib.h>
 typedef struct node { // The linked list node is defined.
